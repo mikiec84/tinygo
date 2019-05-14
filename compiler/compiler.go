@@ -738,6 +738,9 @@ func (c *Compiler) parseFunc(frame *Frame) error {
 	if c.DumpSSA {
 		fmt.Printf("\nfunc %s:\n", frame.fn.Function)
 	}
+	if !frame.fn.LLVMFn.IsDeclaration() {
+		panic("function is already defined: " + frame.fn.LLVMFn.Name())
+	}
 	if !frame.fn.IsExported() {
 		frame.fn.LLVMFn.SetLinkage(llvm.InternalLinkage)
 		frame.fn.LLVMFn.SetUnnamedAddr(true)
