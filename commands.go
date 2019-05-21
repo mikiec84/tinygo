@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -13,6 +14,14 @@ var commands = map[string][]string{
 	"clang":   {"clang-8"},
 	"ld.lld":  {"ld.lld-8", "ld.lld"},
 	"wasm-ld": {"wasm-ld-8", "wasm-ld"},
+}
+
+func init() {
+	// Add the path to a Homebrew-installed clang-8 for ease of use (no need to
+	// manually set $PATH).
+	if runtime.GOOS == "darwin" {
+		commands["clang"] = append(commands["clang"], "/usr/local/bin/clang-8")
+	}
 }
 
 func execCommand(cmdNames []string, args ...string) error {
