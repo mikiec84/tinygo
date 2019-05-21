@@ -6,6 +6,14 @@ import (
 )
 
 func main() {
+	document := js.Global().Get("document")
+	updateCallback := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		update()
+		return nil
+	})
+	document.Call("getElementById", "a").Set("oninput", updateCallback)
+	document.Call("getElementById", "b").Set("oninput", updateCallback)
+	update()
 }
 
 //go:export add
@@ -13,7 +21,6 @@ func add(a, b int) int {
 	return a + b
 }
 
-//go:export update
 func update() {
 	document := js.Global().Get("document")
 	aStr := document.Call("getElementById", "a").Get("value").String()
